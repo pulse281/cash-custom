@@ -470,7 +470,7 @@ Template Name: Home Page Template
         </div>
       </section>
 
-    </div>
+
 
     <div style="padding: 20px 0;">
       <div class="category-filters">
@@ -494,7 +494,7 @@ Template Name: Home Page Template
       </div>
     </div>
 
-    <div class="container">
+
 
       <section class="steps" id="steps">
         <h2><?php the_field( 'how_its_work_fields' ) ?>          

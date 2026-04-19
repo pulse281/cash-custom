@@ -482,7 +482,7 @@ Template Name: Home Page Template
         <button class="category-btn" data-category="top">Топ МФО</button>
       </div>
 
-      <div class="offer__button" style="display: flex; justify-content: center; with: 100%; margin-bottom: 20px;">
+      <div class="more-offers-button">
         <a
           class="btn btn_offer-request"
           style="text-align: center;"

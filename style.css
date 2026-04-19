@@ -910,6 +910,12 @@ h2 {
   flex-direction: column;
   margin-top: 10px;
 }
+.more-offers-button {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 20px;
+}
 .offer__trigger {
   margin-top: 10px;
   margin-left: 15px;

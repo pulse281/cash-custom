@@ -1,0 +1,30 @@
+.lang {
+    position: relative;
+    padding-left: 32px;
+    display: block;
+
+    &:before {
+        content: '';
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 11px;
+    }
+    
+}
+.lang-ua::before {
+    background-image: url('../img/languages/ua.png');
+}
+.lang-ru::before {
+    background-image: url('../img/languages/ru.png');
+}
+
+.choice-lang {
+    position: absolute;
+    background: rgba(255, 255, 255, .2);
+    border: 1px solid black;
+    transition: all 1s;
+    
+}

@@ -1,0 +1,14 @@
+.footer {
+    min-height: 100px;
+    background-color: black;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family: "Roboto", sans-serif;
+    cursor: default;
+    &__descr {
+        color: #fff;
+        text-align: center;
+    }
+}

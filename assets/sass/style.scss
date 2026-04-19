@@ -1,0 +1,55 @@
+@import '../css/bootstrap-reboot.min.css';
+
+/* 23.02.24 переходим на гугл фонтс */
+/* @import "../css/fonts.css"; */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+/* font-family: "Roboto", sans-serif; */
+
+@import 'assets/animate';
+
+
+/* Icomoon styles */
+
+@font-face {
+    font-family: 'icomoon';
+    src: url('../fonts/steps/icomoon.eot?hnvpo7');
+    src: url('../fonts/steps/icomoon.eot?hnvpo7#iefix') format('embedded-opentype'), url('../fonts/steps/icomoon.ttf?hnvpo7') format('truetype'), url('../fonts/steps/icomoon.woff?hnvpo7') format('woff'), url('../fonts/steps/icomoon.svg?hnvpo7#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+
+
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.page__wrapper {
+    position: relative;
+}
+
+@import 'blocks/variables.scss';
+@import 'blocks/header.scss';
+@import 'blocks/menu.scss';
+@import 'blocks/languages.scss';
+@import 'blocks/promo.scss';
+@import 'blocks/button.scss';
+@import 'blocks/calculator.scss';
+@import 'blocks/catalog.scss';
+@import 'blocks/steps.scss';
+@import 'blocks/text.scss';
+@import 'blocks/questions.scss';
+@import 'blocks/footer.scss';
+@import 'blocks/information.scss';
+@import 'blocks/aside-offer.scss';
+@import 'blocks/sidebar-message.scss';
+
+@import 'blocks/media.scss';
+@import 'blocks/show-hide.scss';
+

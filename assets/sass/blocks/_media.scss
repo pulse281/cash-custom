@@ -1,0 +1,219 @@
+@media (max-width: 1500px) {
+    .container {
+        width: 1024px;
+    }
+}
+
+@media (min-width: 1261px) {
+    .promo {
+        display: flex;
+        align-items: center;
+    }
+}
+
+@media (max-width: 1260px) {
+    .container {
+        width: 95%;
+    }
+    .steps__wrapper {
+        width: auto;
+    }
+    .steps__item {
+        width: 300px;
+    }
+    .steps__title {
+        font-size: 16px;
+    }
+    .steps__descr {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 985px) {
+    .header-wrapper {
+        position: fixed;
+    }
+    .menu {
+        display: none;
+    }
+    .menu-mobile {
+        display: flex;
+        position: fixed;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        height: 100vh;
+        width: 70%;
+        right: -100%;
+        top: 0;
+        background-color: rgba($main-blue, .98);
+        transition: left 0.5s;
+        z-index: -1;
+        transition: all 0.3s;
+    }
+    .menu__item {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        font-size: 18px;
+        margin-bottom: 20px;
+        border: none;
+        &-lang {
+            position: relative;
+            right: auto;
+        }
+    }
+    .nav__wrapper {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100vh;
+        z-index: -2;
+    }
+    .choice-lang {
+        margin-top: 30px;
+    }
+
+    .menu-mobile_active, .nav__wrapper_active {
+        right: 0;
+    }
+
+    
+    .hamburger {
+        display: flex;
+        &__item_left,
+        &__item_right {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+        }
+        &__item_right {
+            transform: translateY(-50%) rotate(-45deg);
+        }
+    }
+    h1 {
+        font-size: 34px;
+    }
+    h2 {
+        font-size: 26px;
+        line-height: 26px;
+    }
+    .promo__subtitle {
+        font-size: 16px;
+    }
+    .promo__list {
+        font-size: 14px;
+    }
+    .btn_offer-request {
+        height: 42px;
+    }
+    .btn_offer-request:hover {
+        border: 1px solid black;
+        box-shadow: none;
+    }
+    .steps__wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+    .steps__item {
+        width: 350px;
+        box-shadow: 0 0 10px black;
+    }
+    .steps__item:hover {
+        transform: none;
+    }
+    .steps__item:active {
+        transform: scale(1);
+        background-color: rgba(59, 59, 195, 0.75);
+        transition: all 200ms;
+    }
+}
+
+@media (max-width: 800px) {
+    .promo .promo__wrapper {
+        min-height: 210px;
+    }
+    .calculator {
+        display: none;
+    }
+    .promo__descr {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 28px;
+    }
+    /* .header {
+        position: fixed;
+    } */
+    .promo {
+        display: none;
+    }
+
+    .offer__button {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .btn_offer-request {
+        max-width: 260px;
+        height: 65px;
+    }
+    .offer__trigger {
+        margin-top: 20px;
+        margin-left: unset;
+    }
+    .promo__subtitle {
+        font-size: 15px;
+    }
+    .steps__item {
+        width: 300px;
+    }
+    .text__calculation {
+        padding: 0;
+        li {
+            text-indent: 15px;
+        }
+    }
+    .text__advantages-wrapper {
+        margin: 0;
+    }
+    .text__advantages {
+        padding: 0;
+        li:first-child {
+            display: block;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        li {
+            margin: 0;
+        }
+    }
+    .questions {
+        font-size: 14px;
+    }   
+
+    .sidebar__message {
+        max-width: 100%;
+        bottom: 3%;
+        padding: 20px 10px;
+        &-text {
+            margin-bottom: 0;
+        }
+        &_active {
+            right: 0;
+        }
+    }
+}
+
+@media (max-width: 370px) {
+    .container {
+        width: 97%;
+    }
+
+}

@@ -1,0 +1,50 @@
+.btn {
+    max-width: 150px;
+    max-height: 50px;
+    padding: 10px;
+    border-radius: 15px;
+    border: 1px solid #535458;
+    cursor: pointer;
+    will-change: transform,scale;
+    &:active {
+        border: 2px solid #535458;
+    }
+}
+
+.btnEdit {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn_offer-request {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #125f1b;
+    border: 1px solid black;
+    color: #fff;
+    transition: all 200ms;
+    &:hover {
+        color: #fff;
+        text-decoration: none;
+        box-shadow: 0 0 7px green;
+    }
+    &:active {
+        border: 1px solid #343a40;
+        box-shadow: 0 0 5px black;
+        transform: scale(.95);
+    }
+}
+
+.btn_show-offers {
+    display: block;
+    margin: 0 auto;
+    width: 70%;
+    background-color: $main-blue;
+    color: #fff;
+}

@@ -1,0 +1,42 @@
+.questions {
+    min-height: 700px;
+    padding-bottom: 30px;
+    cursor: default;
+    @include section-border;
+    &__y {
+        position: absolute;
+        top: 50%;
+        left: 5px;
+        border-top: 1px solid black;
+        width: 20px;
+    }
+    &__x {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 15px;
+        border-left: 1px solid black;
+        height: 20px;
+    }
+    &__quest {
+        position: relative;
+        border: 1px solid $main-blue;
+        border-radius: 10px;
+        padding: 5px 5px 5px 30px;
+        font-family: "Roboto", sans-serif;
+        font-weight: 600;
+        background-color: rgba(128, 128, 128, .2);
+    }
+    &__wrapper {
+        position: relative;
+        margin-top: 20px;
+        cursor: pointer;
+    }
+    &__ans {
+        height: 0;
+        font-family: "Roboto", sans-serif;
+        font-weight: normal;
+        overflow: hidden;
+        transition: height 0.5s;
+    }
+}

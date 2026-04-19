@@ -1,0 +1,30 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies
+node_modules/
+vendor/
+
+# Build / cache
+.cache/
+dist/
+build/
+
+# Environment
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# Source maps
+assets/js/*.map
+assets/css/*.map

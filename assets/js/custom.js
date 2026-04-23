@@ -48,12 +48,40 @@ const sidebarMessage = () => {
 
 document.addEventListener("DOMContentLoaded", sidebarMessage);
 
+const initOfferClickTracking = () => {
+  const offerButtons = document.querySelectorAll(".btn_offer");
+
+  if (!offerButtons.length) return;
+
+  offerButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      if (typeof window.gtag !== "function") return;
+
+      const eventLabel = button.dataset.eventLabel || "";
+
+      window.gtag("event", "click_offer", {
+        event_category: "offers",
+        event_label: eventLabel,
+      });
+
+      window.gtag("event", "conversion", {
+        send_to: "AW-838357114/VssxCOSJ3JEcEPqg4Y8D",
+      });
+    });
+  });
+};
+
+document.addEventListener("DOMContentLoaded", initOfferClickTracking);
+
 // Category Filtering Functionality
 
 const initCategoryFilters = () => {
   const categoryButtons = document.querySelectorAll(".category-btn");
 
   const offers = Array.from(document.querySelectorAll(".offer"));
+  const totalOffersCount = offers.length;
+
+  const offersCounter = document.querySelectorAll(".offers-counter-text");
 
   const catalogSection = document.querySelector(".catalog");
 
@@ -128,6 +156,13 @@ const initCategoryFilters = () => {
     });
   };
 
+  const updateOffersCounter = (shown, total) => {
+    if (!offersCounter || offersCounter.length === 0) return;
+    offersCounter.forEach(
+      (item) => (item.textContent = `Обрано ${shown} з ${total} МФО`),
+    );
+  };
+
   const applyCategoryVisibility = () => {
     offers.forEach((offer) => {
       offer.classList.toggle(
@@ -196,6 +231,8 @@ const initCategoryFilters = () => {
     }
 
     visibleCount = nextVisibleCount;
+
+    updateOffersCounter(matchingOffers.length, totalOffersCount);
 
     return visibleCount < matchingOffers.length;
   };

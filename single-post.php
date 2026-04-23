@@ -19,6 +19,8 @@ get_header();
 	<main id="primary" class="site-main">
 
 		<?php
+        $timestampMs = round(microtime(true) * 1000);
+        
 		while ( have_posts() ) :
 			the_post();
 
@@ -40,11 +42,11 @@ get_header();
 <div id="offers">
 
     <?php 
-        $seconds = round(microtime(true));
+        
         $url = get_field('offer_page');
 
-        $offerUrlTop = $url . '&source=ck&campaign=opt&promo=' . $seconds;
-        $offerUrlBottom = $url . '&source=ck&campaign=opb&promo=' . $seconds;
+        $offerUrlTop = $url . '&source=ck&campaign=opt&promo=' . $timestampMs;
+        $offerUrlBottom = $url . '&source=ck&campaign=opb&promo=' . $timestampMs;
     ?>
 
     <section class="offer-hero">
@@ -82,10 +84,10 @@ get_header();
                     </div>
 
                     <a href="<?php echo $offerUrlTop; ?>"
-                    class="btn btn-primary" 
+                    class="btn btn-primary btn_offer" 
                     rel="sponsored nofollow noopener"
                     target="_blank"
-                    onclick="gtag('event', 'conversion', {'send_to': 'AW-838357114/VssxCOSJ3JEcEPqg4Y8D'});">
+                    data-event-label="<?php echo (int) $timestampMs; ?>">
                     
                     Подати заявку
                     </a>
@@ -201,10 +203,10 @@ get_header();
     <section class="offer-cta">
         <div class="container">
             <a href="<?php echo $offerUrlBottom; ?>"
-            class="btn btn-large"
+            class="btn btn-large btn_offer"
             rel="sponsored nofollow noopener"
             target="_blank"
-            onclick="gtag('event', 'conversion', {'send_to': 'AW-838357114/VssxCOSJ3JEcEPqg4Y8D'});">
+            data-event-label="<?php echo (int) $timestampMs; ?>">
             Подати заявку в <?php the_title(); ?>
            
             </a>

@@ -389,6 +389,11 @@ add_action('init', function() {
     pll_register_string('Footer Contacts', 'Адреса', 'Home Page');
     pll_register_string('Footer Contacts', 'Телефон', 'Home Page');
     pll_register_string('Footer Contacts', 'e-mail', 'Home Page');
+
+    // Группа: счетчик выбранных офферов в категории
+    pll_register_string('Category counter text', 'Обрано ', 'Home Page');
+    pll_register_string('Category counter text', ' з ', 'Home Page');
+    pll_register_string('Category counter text', ' МФО', 'Home Page');
     
     // Группа: Сообщения
     pll_register_string('Messages', 'Збільшуйте шанси на позитивне рішення обравши декілька компаній', 'Home Page');

@@ -399,6 +399,46 @@ add_action('init', function() {
     pll_register_string('Messages', 'Збільшуйте шанси на позитивне рішення обравши декілька компаній', 'Home Page');
 });
 
+// Сортировка категорий по order
+add_filter('wp_get_object_terms_args', function ($args, $object_ids, $taxonomies) {
+    if (is_admin()) {
+        return $args;
+    }
+
+    if (in_array('category', (array) $taxonomies, true)) {
+        $args['orderby'] = 'term_order';
+        $args['order'] = 'ASC';
+    }
+
+    return $args;
+}, 10, 3);
+
+add_filter('wpseo_breadcrumb_links', function ($links) {
+    if (!is_single()) {
+        return $links;
+    }
+
+    $main_category = get_category_by_slug('offers');
+
+    if (!$main_category) {
+        return $links;
+    }
+
+    foreach ($links as $key => $link) {
+        if (!empty($link['term_id']) && !empty($link['taxonomy']) && $link['taxonomy'] === 'category') {
+            $links[$key] = [
+                'url' => get_category_link($main_category->term_id),
+                'text' => $main_category->name,
+                'term_id' => $main_category->term_id,
+                'taxonomy' => 'category',
+            ];
+            break;
+        }
+    }
+
+    return $links;
+});
+
 /* function custom_redirect_script() {
     wp_enqueue_script('jquery');
 

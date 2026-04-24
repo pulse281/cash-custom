@@ -425,19 +425,20 @@ add_filter('wpseo_breadcrumb_links', function ($links) {
     }
 
     foreach ($links as $key => $link) {
-        if (!empty($link['term_id']) && !empty($link['taxonomy']) && $link['taxonomy'] === 'category') {
+        if (
+            !empty($link['term_id']) ||
+            (!empty($link['url']) && str_contains($link['url'], '/category/'))
+        ) {
             $links[$key] = [
                 'url' => get_category_link($main_category->term_id),
                 'text' => $main_category->name,
-                'term_id' => $main_category->term_id,
-                'taxonomy' => 'category',
             ];
             break;
         }
     }
 
     return $links;
-});
+}, 99);
 
 /* function custom_redirect_script() {
     wp_enqueue_script('jquery');

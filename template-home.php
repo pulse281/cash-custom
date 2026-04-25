@@ -9,9 +9,7 @@ Template Name: Home Page Template
 ?>
 
   <?php
-    $timestampMs = round(microtime(true) * 1000);
-
-    if ( have_posts() ) :
+      if ( have_posts() ) :
         while ( have_posts() ) : the_post();
   ?>
 
@@ -148,8 +146,6 @@ Template Name: Home Page Template
 
                   $url = get_field('referral_link');
 
-                  $offerUr = $url . '&source=ck&promo=' . $timestampMs;
-
                   $idName = esc_attr( sanitize_title( get_the_title() ) );
               ?>
 
@@ -266,10 +262,10 @@ Template Name: Home Page Template
                     <a
                       id="<?php echo $idName ?>"
                       class="btn btn_offer-request btn_offer"
-                      href="<?php echo $offerUr; ?>"
+                      href="<?php echo esc_url($url); ?>"
                       target="_blank"
                       rel="sponsored nofollow noopener"
-                      data-event-label="<?php echo (int) $timestampMs; ?>">
+                      data-base-url="<?php echo esc_url($url); ?>">
                       Подати заявку</a
                     >
                     <div class="offer__trigger offer__trigger_up">

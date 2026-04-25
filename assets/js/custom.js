@@ -53,15 +53,30 @@ const initOfferClickTracking = () => {
 
   if (!offerButtons.length) return;
 
+  const promoId = Date.now().toString();
+
   offerButtons.forEach((button) => {
+    const baseUrl = button.dataset.baseUrl;
+    if (!baseUrl) return;
+
+    const campaign = button.dataset.campaign || "";
+
+    const url = new URL(baseUrl);
+    url.searchParams.set("source", "ck");
+    url.searchParams.set("promo", promoId);
+
+    if (campaign) {
+      url.searchParams.set("campaign", campaign);
+    }
+
+    button.href = url.toString();
+
     button.addEventListener("click", () => {
       if (typeof window.gtag !== "function") return;
 
-      const eventLabel = button.dataset.eventLabel || "";
-
       window.gtag("event", "click_offer", {
         event_category: "offers",
-        event_label: eventLabel,
+        event_label: promoId,
       });
 
       window.gtag("event", "conversion", {

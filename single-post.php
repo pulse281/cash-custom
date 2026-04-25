@@ -18,9 +18,7 @@ get_header();
 
 	<main id="primary" class="site-main">
 
-		<?php
-        $timestampMs = round(microtime(true) * 1000);
-        
+		<?php        
 		while ( have_posts() ) :
 			the_post();
 
@@ -44,9 +42,6 @@ get_header();
     <?php 
         
         $url = get_field('offer_page');
-
-        $offerUrlTop = $url . '&source=ck&campaign=opt&promo=' . $timestampMs;
-        $offerUrlBottom = $url . '&source=ck&campaign=opb&promo=' . $timestampMs;
     ?>
 
     <section class="offer-hero">
@@ -83,12 +78,13 @@ get_header();
                         <span>Працює: <?php the_field('work_time'); ?></span>
                     </div>
 
-                    <a href="<?php echo $offerUrlTop; ?>"
+                    <a 
+                    href="<?php echo esc_url($url); ?>"
+                    data-base-url="<?php echo esc_url($url); ?>"
+                    data-campaign="opt"
                     class="btn btn-primary btn_offer" 
                     rel="sponsored nofollow noopener"
-                    target="_blank"
-                    data-event-label="<?php echo (int) $timestampMs; ?>">
-                    
+                    target="_blank">                    
                     Подати заявку
                     </a>
                 </div>
@@ -202,13 +198,14 @@ get_header();
 
     <section class="offer-cta">
         <div class="container">
-            <a href="<?php echo $offerUrlBottom; ?>"
+            <a 
+            href="<?php echo esc_url($url); ?>"
+            data-base-url="<?php echo esc_url($url); ?>"
+            data-campaign="opb"
             class="btn btn-large btn_offer"
             rel="sponsored nofollow noopener"
-            target="_blank"
-            data-event-label="<?php echo (int) $timestampMs; ?>">
+            target="_blank">
             Подати заявку в <?php the_title(); ?>
-           
             </a>
         </div>
     </section>

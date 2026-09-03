@@ -27,21 +27,37 @@
       <header class="header">
         <div class="header-wrapper animate__animated">
           <div class="container">
-			  <a class="header__logo" href="<?php echo esc_url(home_url('/')); ?>" rel="home">
+			  <a class="header__logo" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
 				  <?php
-					  if (has_custom_logo()) {
-						  the_custom_logo();
-					  } else { ?>
-					  <div class="header__title">                       
-						  <?php bloginfo('name'); ?>
-					  </div>
-				  <?php } ?>
-
-				  <?php 
-						$description = get_bloginfo('description', 'display');
-						if ($description || is_customize_preview()) : ?>
-						  <div class="header__subtitle"><?php echo $description; ?></div>
-				  <?php endif; ?>
+					$custom_logo_id = get_theme_mod( 'custom_logo' );
+					if ( $custom_logo_id ) {
+						echo wp_get_attachment_image(
+							$custom_logo_id,
+							'full',
+							false,
+							array( 'class' => 'header__logo-image' )
+						);
+					} else {
+						?>
+						<img
+							class="header__logo-image"
+							src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/new-logo-redesign-1_small.png' ); ?>"
+							alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"
+							width="51"
+							height="34"
+						/>
+						<?php
+					}
+				  ?>
+				  <div class="header__text">
+					  <div class="header__title"><?php bloginfo( 'name' ); ?></div>
+					  <?php
+						$description = get_bloginfo( 'description', 'display' );
+						if ( $description || is_customize_preview() ) :
+					  ?>
+						  <div class="header__subtitle"><?php echo esc_html( $description ); ?></div>
+					  <?php endif; ?>
+				  </div>
             </a>
             <nav id="site-navigation" class="main-navigation">
 

@@ -17,7 +17,7 @@ import openPromo from './modules/openPromo.js'; */
 import categoryArrow from "./modules/categoryArrow.js";
 import sidebarMessage from "./modules/sidebarMessage.js";
 
-fadeMenu();
+// fadeMenu(); // Временно отключено: шапка не должна двигаться при прокрутке.
 steps();
 progress();
 questions();

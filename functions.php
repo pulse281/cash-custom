@@ -146,16 +146,16 @@ add_action( 'widgets_init', 'cash_custom_widgets_init' );
  */
 function cash_custom_scripts() {
 	wp_enqueue_style(
-		'cash-custom-google-fonts',
-		'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;900&display=swap',
+		'cash-custom-fonts',
+		get_template_directory_uri() . '/assets/css/fonts.css',
 		array(),
-		null
+		_S_VERSION
 	);
 
 	wp_enqueue_style(
 		'cash-custom-style',
 		get_stylesheet_uri(),
-		array( 'cash-custom-google-fonts' ),
+		array( 'cash-custom-fonts' ),
 		_S_VERSION
 	);
 

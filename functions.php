@@ -9,7 +9,7 @@
 
 if ( ! defined( '_S_VERSION' ) ) {
 	// Replace the version number of the theme on each release.
-	define( '_S_VERSION', '1.0.0' );
+	define( '_S_VERSION', '1.0.2' );
 }
 
 /**
@@ -145,10 +145,30 @@ add_action( 'widgets_init', 'cash_custom_widgets_init' );
  * Enqueue scripts and styles.
  */
 function cash_custom_scripts() {
-	wp_enqueue_style( 'cash-custom-style', get_stylesheet_uri(), array(), _S_VERSION );
-	wp_style_add_data( 'cash-custom-style', 'rtl', 'replace' );
+	wp_enqueue_style(
+		'cash-custom-google-fonts',
+		'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;900&display=swap',
+		array(),
+		null
+	);
 
-	wp_enqueue_script( 'cash-custom-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
+	wp_enqueue_style(
+		'cash-custom-style',
+		get_stylesheet_uri(),
+		array( 'cash-custom-google-fonts' ),
+		_S_VERSION
+	);
+
+	wp_enqueue_script(
+		'cash-custom-navigation',
+		get_template_directory_uri() . '/js/navigation.js',
+		array(),
+		_S_VERSION,
+		array(
+			'in_footer' => true,
+			'strategy'  => 'defer',
+		)
+	);
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
@@ -191,19 +211,25 @@ function cash_scripts() {
 		'cash-scripts',
 		get_template_directory_uri() . '/assets/js/script.js',
 		array(),
-		null,
-		true
+		'1.0.0',
+		array(
+			'in_footer' => true,
+			'strategy'  => 'defer',
+		)
 	);
 
 	wp_enqueue_script(
 		'theme-custom-js',
 		get_template_directory_uri() . '/assets/js/custom.js',
-		array('cash-scripts'),
-		'1.0',
-		true
+		array( 'cash-scripts' ),
+		'1.0.1',
+		array(
+			'in_footer' => true,
+			'strategy'  => 'defer',
+		)
 	);
 }
-add_action('wp_enqueue_scripts', 'cash_scripts');
+add_action( 'wp_enqueue_scripts', 'cash_scripts' );
 
 add_filter('wpseo_breadcrumb_links', function($links) {
 
@@ -258,6 +284,56 @@ remove_action('wp_head', 'rest_output_link_wp_head');
 // Убрать oEmbed
 remove_action('wp_head', 'wp_oembed_add_discovery_links');
 remove_action('wp_head', 'wp_oembed_add_host_js');
+
+/**
+ * Check catalog landing pages.
+ */
+function cashkredit_is_catalog_landing_page() {
+	if ( is_admin() ) {
+		return false;
+	}
+
+	$page_slugs = array(
+		'novi-mfo',
+		'credit-online',
+		'online-credit-na-kartu',
+		'kredit-na-kartu',
+		'groshi-online',
+		'kredit-bez-vidmovy',
+	);
+
+	if ( function_exists( 'is_page' ) && is_page( $page_slugs ) ) {
+		return true;
+	}
+
+	$path = trim( parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH ), '/' );
+
+	return in_array( $path, $page_slugs, true );
+}
+
+
+/**
+ * Remove Gutenberg block CSS from catalog landing pages.
+ */
+add_action( 'wp_print_styles', function () {
+	if ( ! cashkredit_is_catalog_landing_page() ) {
+		return;
+	}
+
+	$styles_to_remove = array(
+		'wp-block-library',
+		'wp-block-library-theme',
+		'global-styles',
+		'classic-theme-styles',
+		'wp-block-paragraph',
+		'wp-block-heading',
+	);
+
+	foreach ( $styles_to_remove as $style_handle ) {
+		wp_dequeue_style( $style_handle );
+		wp_deregister_style( $style_handle );
+	}
+}, 999 );
 
 // Убрать generator
 remove_action('wp_head', 'wp_generator');
@@ -440,29 +516,25 @@ add_filter('wpseo_breadcrumb_links', function ($links) {
     return $links;
 }, 99);
 
-/* function custom_redirect_script() {
-    wp_enqueue_script('jquery');
+/**
+ * Custom image sizes for offer cards.
+ */
+add_action('after_setup_theme', function () {
+	add_image_size('offer_badge_small', 96, 150, false);
+});
 
-    wp_add_inline_script('jquery', '
-        jQuery(function ($) {
-            $("#offers").on("mousedown", "a.rdr, a.img-link", function () {
-                const url = this.dataset.href;
-                if (url) this.href = "#";
-            });
+/**
+ * Disable srcset for offer badge images.
+ * Badges are small decorative images, so we don't need retina/original versions.
+ */
+add_filter('wp_get_attachment_image_attributes', function ($attr, $attachment, $size) {
+	if (
+		!empty($attr['class']) &&
+		strpos($attr['class'], 'offer_badge_info_img') !== false
+	) {
+		unset($attr['srcset']);
+		unset($attr['sizes']);
+	}
 
-            $("#offers").on("contextmenu", "a.rdr, a.img-link", function () {
-                const url = this.dataset.href;
-                if (url) this.href = url;
-            });
-
-            $("#offers").on("click", "a.rdr, a.img-link", function (e) {
-                const url = this.dataset.href;
-                if (url) {
-                    e.preventDefault();
-                    window.open(url, "_blank");
-                }
-            });
-        });
-    ');
-}
-add_action('wp_enqueue_scripts', 'custom_redirect_script'); */
+	return $attr;
+}, 10, 3);

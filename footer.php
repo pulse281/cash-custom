@@ -49,6 +49,34 @@
       </footer>
     </div>
 
+      <!-- <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+
+      window.__loadCashKreditGtag = function () {
+        if (window.__cashKreditGtagLoaded) return;
+        window.__cashKreditGtagLoaded = true;
+
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-NG2S1JHWF2';
+        document.head.appendChild(script);
+
+        gtag('js', new Date());
+        gtag('config', 'G-NG2S1JHWF2');
+        gtag('config', 'AW-838357114');
+      };
+
+      ['pointerdown', 'touchstart', 'keydown', 'scroll'].forEach(function (eventName) {
+        window.addEventListener(eventName, window.__loadCashKreditGtag, {
+          once: true,
+          passive: true
+        });
+      });
+
+      setTimeout(window.__loadCashKreditGtag, 2500);
+    </script> -->
+
     <?php
     wp_footer(  );
     ?>

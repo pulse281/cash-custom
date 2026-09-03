@@ -1,22 +1,28 @@
 /* JS для стрілок (горизонтальний скрол літер) */
 
-try {
-  document.querySelector(".letter-next").addEventListener("click", function () {
-    document.querySelector(".letters-scroll").scrollBy({
+const initLettersScroll = () => {
+  const nextButton = document.querySelector(".letter-next");
+  const prevButton = document.querySelector(".letter-prev");
+  const lettersScroll = document.querySelector(".letters-scroll");
+
+  if (!nextButton || !prevButton || !lettersScroll) return;
+
+  nextButton.addEventListener("click", () => {
+    lettersScroll.scrollBy({
       left: 100,
-
       behavior: "smooth",
     });
   });
 
-  document.querySelector(".letter-prev").addEventListener("click", function () {
-    document.querySelector(".letters-scroll").scrollBy({
+  prevButton.addEventListener("click", () => {
+    lettersScroll.scrollBy({
       left: -100,
-
       behavior: "smooth",
     });
   });
-} catch (error) {}
+};
+
+document.addEventListener("DOMContentLoaded", initLettersScroll);
 
 const sidebarMessage = () => {
   const sideMessage = document.querySelector(".sidebar__message");
@@ -78,25 +84,19 @@ const initOfferClickTracking = () => {
         event_category: "offers",
         event_label: promoId,
       });
-
-      window.gtag("event", "conversion", {
-        send_to: "AW-838357114/VssxCOSJ3JEcEPqg4Y8D",
-      });
     });
   });
 };
 
 document.addEventListener("DOMContentLoaded", initOfferClickTracking);
 
-// Category Filtering Functionality
+// Category filtering functionality temporarily disabled.
 
 const initCategoryFilters = () => {
   const categoryButtons = document.querySelectorAll(".category-btn");
 
   const offers = Array.from(document.querySelectorAll(".offer"));
   const totalOffersCount = offers.length;
-
-  const offersCounter = document.querySelectorAll(".offers-counter-text");
 
   const catalogSection = document.querySelector(".catalog");
 
@@ -105,9 +105,7 @@ const initCategoryFilters = () => {
   if (!categoryButtons.length || !offers.length || !catalogSection) return;
 
   let activeCategory = "all";
-
   let visibleCount = 0;
-
   let scrollTicking = false;
 
   const orderFieldByCategory = {
@@ -121,15 +119,10 @@ const initCategoryFilters = () => {
 
   const matchesCategory = (offer, category) => {
     if (category === "all") return true;
-
     const categories = (offer.dataset.categories || "")
-
       .split(",")
-
       .map((item) => item.trim())
-
       .filter(Boolean);
-
     return categories.includes(category);
   };
 
@@ -171,18 +164,10 @@ const initCategoryFilters = () => {
     });
   };
 
-  const updateOffersCounter = (shown, total) => {
-    if (!offersCounter || offersCounter.length === 0) return;
-    offersCounter.forEach(
-      (item) => (item.textContent = `Обрано ${shown} з ${total} МФО`),
-    );
-  };
-
   const applyCategoryVisibility = () => {
     offers.forEach((offer) => {
       offer.classList.toggle(
         "category-hidden",
-
         !matchesCategory(offer, activeCategory),
       );
     });
@@ -199,15 +184,12 @@ const initCategoryFilters = () => {
 
     if (reset) {
       visibleCount = 0;
-
       applyCategoryVisibility();
-
       matchingOffers.forEach((offer) => offer.classList.add("batch-hidden"));
     }
 
     const nextVisibleCount = Math.min(
       visibleCount + batchSize,
-
       matchingOffers.length,
     );
 
@@ -216,39 +198,38 @@ const initCategoryFilters = () => {
     }
 
     if (animate) {
+      const offersToAnimate = [];
+
       for (let index = startIndex; index < nextVisibleCount; index++) {
         const offer = matchingOffers[index];
 
         offer.classList.remove("offer-stagger-in");
-
         offer.style.removeProperty("--offer-stagger-delay");
 
-        void offer.offsetWidth;
-
-        offer.style.setProperty(
-          "--offer-stagger-delay",
-
-          `${(index - startIndex) * 70}ms`,
-        );
-
-        offer.classList.add("offer-stagger-in");
+        offersToAnimate.push({
+          offer,
+          delay: `${(index - startIndex) * 70}ms`,
+        });
       }
+
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          offersToAnimate.forEach(({ offer, delay }) => {
+            offer.style.setProperty("--offer-stagger-delay", delay);
+            offer.classList.add("offer-stagger-in");
+          });
+        });
+      });
     }
 
     for (let index = nextVisibleCount; index < matchingOffers.length; index++) {
       const offer = matchingOffers[index];
-
       offer.classList.add("batch-hidden");
-
       offer.classList.remove("offer-stagger-in");
-
       offer.style.removeProperty("--offer-stagger-delay");
     }
 
     visibleCount = nextVisibleCount;
-
-    updateOffersCounter(matchingOffers.length, totalOffersCount);
-
     return visibleCount < matchingOffers.length;
   };
 
@@ -262,12 +243,10 @@ const initCategoryFilters = () => {
 
       if (!hasMore) {
         scrollTicking = false;
-
         return;
       }
 
       const catalogRect = catalogSection.getBoundingClientRect();
-
       const reachedCatalogEnd = catalogRect.bottom <= window.innerHeight + 80;
 
       if (reachedCatalogEnd) {
@@ -293,19 +272,14 @@ const initCategoryFilters = () => {
       }
 
       syncActiveCategoryButtons(activeCategory);
-
       showNextBatch(true, true);
-
       window.scrollTo({ top: 0, behavior: "smooth" });
-
       handleCatalogScroll();
     });
   });
 
   syncActiveCategoryButtons(activeCategory);
-
   showNextBatch(true, false);
-
   window.addEventListener("scroll", handleCatalogScroll, { passive: true });
 };
 

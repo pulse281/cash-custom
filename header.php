@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
     <!-- Google tag (gtag.js) -->
-<!--     <script async src="https://www.googletagmanager.com/gtag/js?id=G-NG2S1JHWF2"></script>
+ <!--    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NG2S1JHWF2"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}

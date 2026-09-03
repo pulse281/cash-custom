@@ -8,6 +8,8 @@ Template Name: Home Page Template
 get_header();
 ?>
 
+<main id="primary" class="site-main home-page">
+
 <?php
 if (have_posts()) :
   while (have_posts()) : the_post();
@@ -113,13 +115,17 @@ if (have_posts()) :
 
             <?php
             $args = [
-              'post_type'      => 'post',
-              'posts_per_page' => -1,
-              'category_name'  => 'offers',
-              'meta_key'       => 'offer_order',
-              'orderby'        => 'meta_value_num',
-              'order'          => 'ASC',
-              'meta_query'     => [
+              'post_type'              => 'post',
+              'posts_per_page'         => -1,
+              'category_name'          => 'offers',
+              'meta_key'               => 'offer_order',
+              'orderby'                => 'meta_value_num',
+              'order'                  => 'ASC',
+              'no_found_rows'          => true,
+              'ignore_sticky_posts'    => true,
+              'update_post_meta_cache' => true,
+              'update_post_term_cache' => true,
+              'meta_query'             => [
                 'relation' => 'OR',
                 [
                   'key'     => 'hidden_offer',
@@ -135,6 +141,9 @@ if (have_posts()) :
 
             $query = new WP_Query($args);
 
+            $offers_posts = $query->posts;
+            $offer_icon_base = get_template_directory_uri() . '/assets/img/offer/';
+
             if ($query->have_posts()) :
               while ($query->have_posts()) :
                 $query->the_post();
@@ -145,6 +154,10 @@ if (have_posts()) :
                 $url = get_field('referral_link');
 
                 $idName = esc_attr(sanitize_title(get_the_title()));
+
+                $logo_id = get_field('logo');
+                $order   = (int) get_field('offer_order');
+                $is_first_offer = $order === 1;
                 ?>
 
                 <div
@@ -171,36 +184,29 @@ if (have_posts()) :
                   <div class="offer__header">
                     <div class="offer__logo-wrapper">
 
-                      <?php
-                      $logo_id = get_field('logo');
-                      $order   = get_field('offer_order');
+                        <?php
+                        if ($logo_id) {
 
-                      if ($logo_id) {
+                          $img_args = [
+                            'class'         => 'offer__logo',
+                            'alt'           => get_the_title() . ' — кеш кредит',
+                            'decoding'      => 'async',
+                            'loading'       => $is_first_offer ? 'eager' : 'lazy',
+                            'fetchpriority' => $is_first_offer ? 'high' : 'low',
+                          ];
 
-                        $img_args = [
-                          'class' => 'offer__logo',
-                          'width' => 150,
-                          'alt'   => get_the_title() . ' — кеш кредит'
-                        ];
+                          echo '<a href="' . esc_url($url) . '" id="logo-' . esc_attr($idName) . '" class="offer__logo-link btn_offer" target="_blank" rel="sponsored nofollow noopener" data-base-url="' . esc_url($url) . '">';
 
-                        // Если это первый оффер
-                        if ((int)$order === 1) {
-                          $img_args['fetchpriority'] = 'high';
-                          $img_args['loading'] = 'eager';
+                          echo wp_get_attachment_image(
+                            $logo_id,
+                            'medium',
+                            false,
+                            $img_args
+                          );
+
+                          echo '</a>';
                         }
-
-                        echo '<a href="' . esc_url($url) . '" id="logo-' . esc_attr($idName) . '" class="offer__logo-link btn_offer" target="_blank" rel="sponsored nofollow noopener" data-base-url="' . esc_url($url) . '">';
-
-                        echo wp_get_attachment_image(
-                          $logo_id,
-                          'medium',
-                          false,
-                          $img_args
-                        );
-
-                        echo '</a>';
-                      }
-                      ?>
+                        ?>
                       <div style='margin-top: 10px;'>
                         Рейтинг <?php the_field('rate') ?> (<span class="star">&#9733; &#9733; &#9733; &#9733; &#9733;</span>)
                       </div>
@@ -236,13 +242,22 @@ if (have_posts()) :
 
                         <div class="offer__term-links">
                           <a
-                            href="<?php the_field('characteristics_of_the_service') ?>"
+                            href="<?php echo esc_url(get_field('characteristics_of_the_service')); ?>"
                             target="_blank"
-                            class="offer__term-link">Істотні характеристики послуги</a>
+                            rel="noopener nofollow"
+                            class="offer__term-link"
+                            aria-label="<?php echo esc_attr('Істотні характеристики послуги — ' . get_the_title()); ?>">
+                            Істотні характеристики послуги
+                          </a>
+
                           <a
-                            href="<?php the_field('warning_of_possible_consequences') ?>"
+                            href="<?php echo esc_url(get_field('warning_of_possible_consequences')); ?>"
                             target="_blank"
-                            class="offer__term-link">Попередження про можливі наслідки</a>
+                            rel="noopener nofollow"
+                            class="offer__term-link"
+                            aria-label="<?php echo esc_attr('Попередження про можливі наслідки — ' . get_the_title()); ?>">
+                            Попередження про можливі наслідки
+                          </a>
                         </div>
                       </div>
                     </div>
@@ -275,20 +290,28 @@ if (have_posts()) :
                         <div class="offer__requirements-item">
                           <div class="offer__requirements-logo">
                             <img
-                              src="<?php bloginfo('template_url'); ?>/assets/img/offer/user.svg"
-                              alt=""
-                              class="offer__requirements-image" />
+                               src="<?php echo esc_url($offer_icon_base . 'user.svg'); ?>"
+                                alt=""
+                                width="24"
+                                height="24"
+                                loading="lazy"
+                                decoding="async"
+                                class="offer__requirements-image" />
                           </div>
                           <div class="wrapper">
                             <div class="offer__requirements-title">Вік</div>
-                            <div class="offer__requirements-text"><?php the_field('age') ?>5</div>
+                            <div class="offer__requirements-text"><?php the_field('age') ?></div>
                           </div>
                         </div>
                         <div class="offer__requirements-item">
                           <div class="offer__requirements-logo">
                             <img
-                              src="<?php bloginfo('template_url'); ?>/assets/img/offer/drivers-license-o.svg"
+                              src="<?php echo esc_url($offer_icon_base . 'drivers-license-o.svg'); ?>"
                               alt=""
+                              width="24"
+                              height="24"
+                              loading="lazy"
+                              decoding="async"
                               class="offer__requirements-image" />
                           </div>
                           <div class="wrapper">
@@ -303,10 +326,14 @@ if (have_posts()) :
                         </div>
                         <div class="offer__requirements-item">
                           <div class="offer__requirements-logo">
-                            <img
-                              src="<?php bloginfo('template_url'); ?>/assets/img/offer/briefcase.svg"
-                              alt=""
-                              class="offer__requirements-image" />
+                          <img
+                            src="<?php echo esc_url($offer_icon_base . 'briefcase.svg'); ?>"
+                            alt=""
+                            width="24"
+                            height="24"
+                            loading="lazy"
+                            decoding="async"
+                            class="offer__requirements-image" />
                           </div>
                           <div class="wrapper">
                             <div class="offer__requirements-title">
@@ -319,9 +346,13 @@ if (have_posts()) :
                         </div>
                         <div class="offer__requirements-item">
                           <div class="offer__requirements-logo">
-                            <img
-                              src="<?php bloginfo('template_url'); ?>/assets/img/offer/meter.svg"
+                           <img
+                              src="<?php echo esc_url($offer_icon_base . 'meter.svg'); ?>"
                               alt=""
+                              width="24"
+                              height="24"
+                              loading="lazy"
+                              decoding="async"
                               class="offer__requirements-image" />
                           </div>
                           <div class="wrapper">
@@ -338,10 +369,14 @@ if (have_posts()) :
                       <div class="offer__requirements">
                         <div class="offer__requirements-item">
                           <div class="offer__requirements-logo">
-                            <img
-                              src="<?php bloginfo('template_url'); ?>/assets/img/offer/credit-card.svg"
-                              alt=""
-                              class="offer__requirements-image" />
+                         <img
+                            src="<?php echo esc_url($offer_icon_base . 'credit-card.svg'); ?>"
+                            alt=""
+                            width="24"
+                            height="24"
+                            loading="lazy"
+                            decoding="async"
+                            class="offer__requirements-image" />
                           </div>
                           <div class="wrapper">
                             <div class="offer__requirements-title">Отримання</div>
@@ -352,9 +387,13 @@ if (have_posts()) :
                         </div>
                         <div class="offer__requirements-item">
                           <div class="offer__requirements-logo">
-                            <img
-                              src="<?php bloginfo('template_url'); ?>/assets/img/offer/clipboard.svg"
+                           <img
+                              src="<?php echo esc_url($offer_icon_base . 'clipboard.svg'); ?>"
                               alt=""
+                              width="24"
+                              height="24"
+                              loading="lazy"
+                              decoding="async"
                               class="offer__requirements-image" />
                           </div>
                           <div class="wrapper">
@@ -366,10 +405,14 @@ if (have_posts()) :
                         </div>
                         <div class="offer__requirements-item">
                           <div class="offer__requirements-logo">
-                            <img
-                              src="<?php bloginfo('template_url'); ?>/assets/img/offer/calendar.svg"
-                              alt=""
-                              class="offer__requirements-image" />
+                          <img
+                            src="<?php echo esc_url($offer_icon_base . 'calendar.svg'); ?>"
+                            alt=""
+                            width="24"
+                            height="24"
+                            loading="lazy"
+                            decoding="async"
+                            class="offer__requirements-image" />
                           </div>
                           <div class="wrapper">
                             <div class="offer__requirements-title">
@@ -380,9 +423,13 @@ if (have_posts()) :
                         </div>
                         <div class="offer__requirements-item">
                           <div class="offer__requirements-logo">
-                            <img
-                              src="<?php bloginfo('template_url'); ?>/assets/img/offer/stopwatch.svg"
+                           <img
+                              src="<?php echo esc_url($offer_icon_base . 'stopwatch.svg'); ?>"
                               alt=""
+                              width="24"
+                              height="24"
+                              loading="lazy"
+                              decoding="async"
                               class="offer__requirements-image" />
                           </div>
                           <div class="wrapper">
@@ -399,10 +446,14 @@ if (have_posts()) :
 
                         <div class="offer__requirements-item">
                           <div class="offer__requirements-logo">
-                            <img
-                              src="<?php bloginfo('template_url'); ?>/assets/img/offer/file-text.svg"
-                              alt=""
-                              class="offer__requirements-image" />
+                    <img
+                      src="<?php echo esc_url($offer_icon_base . 'file-text.svg'); ?>"
+                      alt=""
+                      width="24"
+                      height="24"
+                      loading="lazy"
+                      decoding="async"
+                      class="offer__requirements-image" />
                           </div>
                           <div class="offer__requirements-text">
                             За банківськими реквізитами
@@ -410,10 +461,14 @@ if (have_posts()) :
                         </div>
                         <div class="offer__requirements-item">
                           <div class="offer__requirements-logo">
-                            <img
-                              src="<?php bloginfo('template_url'); ?>/assets/img/offer/display.svg"
-                              alt=""
-                              class="offer__requirements-image offer__requirements-image_online" />
+                        <img
+                          src="<?php echo esc_url($offer_icon_base . 'display.svg'); ?>"
+                          alt=""
+                          width="24"
+                          height="24"
+                          loading="lazy"
+                          decoding="async"
+                          class="offer__requirements-image offer__requirements-image_online" />
                           </div>
                           <div class="offer__requirements-text">
                             Онлайн в особистому кабінеті фінансової компанії або через
@@ -422,10 +477,14 @@ if (have_posts()) :
                         </div>
                         <div class="offer__requirements-item">
                           <div class="offer__requirements-logo">
-                            <img
-                              src="<?php bloginfo('template_url'); ?>/assets/img/offer/classic-computer.svg"
-                              alt=""
-                              class="offer__requirements-image" />
+                        <img
+                          src="<?php echo esc_url($offer_icon_base . 'classic-computer.svg'); ?>"
+                          alt=""
+                          width="24"
+                          height="24"
+                          loading="lazy"
+                          decoding="async"
+                          class="offer__requirements-image" />
                           </div>
                           <div class="offer__requirements-text">
                             Через термінали самообслуговування
@@ -723,34 +782,22 @@ if (have_posts()) :
 
         <div class="mfo-contacts">
           <?php
-          $my_posts = get_posts([
-            'numberposts' => -1,
-            'category'    => 'offers',
-            'orderby'     => 'date',
-            'order'       => 'ASC',
-            'post_type'   => 'post',
-            'suppress_filters' => true, // suppression of filters of SQL query change
-          ]);
-
-          foreach ($my_posts as $post) {
-            setup_postdata($post);
-          ?>
-            <ul class="mfo-contacts__item">
-              <li><?php the_title() ?> - <?php the_field('llc') ?></li>
-              <li>Адреса: <?php the_field('address') ?></li>
-              <li>Телефон: <?php the_field('phone') ?></li>
-              <li>e-mail: <?php the_field('email') ?></li>
-              <li> <?php the_field('legal') ?></li>
-              <!--                 <li>max РПС (APR): 726,35%</li>
-                        <li>Термін: 62 дні - 1 рік</li>
-                        <li>Вік: 18 до 70 років</li>
-                        <li>Приклад розрахунку на стандартних умовах: при отримані 1000 грн. на 3 місяці, комісія складе 1831 грн., загальна сума повернення 2831 грн., APR 726,35%.</li> -->
-            </ul>
-          <?php
-          }
-          ?>
-
-          <?php wp_reset_postdata(); ?>
+            if (!empty($offers_posts)) :
+              foreach ($offers_posts as $post) :
+                setup_postdata($post);
+            ?>
+                <ul class="mfo-contacts__item">
+                  <li><?php the_title(); ?> - <?php the_field('llc'); ?></li>
+                  <li>Адреса: <?php the_field('address'); ?></li>
+                  <li>Телефон: <?php the_field('phone'); ?></li>
+                  <li>e-mail: <?php the_field('email'); ?></li>
+                  <li><?php the_field('legal'); ?></li>
+                </ul>
+            <?php
+              endforeach;
+              wp_reset_postdata();
+            endif;
+            ?>
 
         </div>
       </div>
@@ -760,6 +807,8 @@ if (have_posts()) :
   endwhile;
 endif;
 ?>
+
+</main>
 
 <?php
 get_footer();

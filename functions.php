@@ -9,7 +9,7 @@
 
 if ( ! defined( '_S_VERSION' ) ) {
 	// Replace the version number of the theme on each release.
-	define( '_S_VERSION', '1.0.2' );
+	define( '_S_VERSION', '1.0.13' );
 }
 
 /**
@@ -211,7 +211,7 @@ function cash_scripts() {
 		'cash-scripts',
 		get_template_directory_uri() . '/assets/js/script.js',
 		array(),
-		'1.0.0',
+		'1.0.7',
 		array(
 			'in_footer' => true,
 			'strategy'  => 'defer',
@@ -222,7 +222,7 @@ function cash_scripts() {
 		'theme-custom-js',
 		get_template_directory_uri() . '/assets/js/custom.js',
 		array( 'cash-scripts' ),
-		'1.0.1',
+		'1.0.3',
 		array(
 			'in_footer' => true,
 			'strategy'  => 'defer',

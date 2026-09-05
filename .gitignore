@@ -28,3 +28,9 @@ build/
 # Source maps
 assets/js/*.map
 assets/css/*.map
+
+# Local AI agent instructions and working files
+AGENTS.md
+.agents/
+.codex/
+scroll-check.cjs

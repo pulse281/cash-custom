@@ -90,197 +90,93 @@ const initOfferClickTracking = () => {
 
 document.addEventListener("DOMContentLoaded", initOfferClickTracking);
 
-// Category filtering functionality temporarily disabled.
+const sendGa4Event = (eventName, params) => {
+  if (typeof window.gtag !== "function") return;
 
-const initCategoryFilters = () => {
-  const categoryButtons = document.querySelectorAll(".category-btn");
+  window.gtag("event", eventName, params);
+};
 
-  const offers = Array.from(document.querySelectorAll(".offer"));
-  const totalOffersCount = offers.length;
+const getPromoAnalyticsState = () => {
+  const amountInput = document.querySelector(".promo-hero .calculator__area_sum");
+  const visibleOffers = Array.from(document.querySelectorAll(".offer")).filter(
+    (offer) => !offer.classList.contains("hide"),
+  ).length;
 
-  const catalogSection = document.querySelector(".catalog");
-
-  const batchSize = 5;
-
-  if (!categoryButtons.length || !offers.length || !catalogSection) return;
-
-  let activeCategory = "all";
-  let visibleCount = 0;
-  let scrollTicking = false;
-
-  const orderFieldByCategory = {
-    all: "orderDefault",
-    "bez-vidsotkiv": "orderZeroPercent",
-    top: "orderTop",
-    "bez-dzvinkiv": "orderBezDzvinkiv",
-    "pogana-ki": "orderPoganaKi",
-    novi: "orderNovi",
+  return {
+    loan_amount: amountInput ? Number(amountInput.value) : 0,
+    visible_offers: visibleOffers,
   };
+};
 
-  const matchesCategory = (offer, category) => {
-    if (category === "all") return true;
-    const categories = (offer.dataset.categories || "")
-      .split(",")
-      .map((item) => item.trim())
-      .filter(Boolean);
-    return categories.includes(category);
-  };
+const initPromoAnalytics = () => {
+  const promo = document.querySelector(".promo-hero");
 
-  const applyOffersOrder = (orderedOffers) => {
-    const orderedSet = new Set(orderedOffers);
-    let orderIndex = 0;
+  if (!promo) return;
 
-    orderedOffers.forEach((offer) => {
-      offer.style.order = orderIndex;
-      orderIndex += 1;
-    });
+  const selectOffers = promo.querySelector(".promo-hero__submit");
+  const helpLink = promo.querySelector(".promo-hero__help");
+  const amountInput = promo.querySelector(".calculator__area_sum");
+  const rangeInput = promo.querySelector(".calculator__range");
+  const calculatorButtons = promo.querySelectorAll(".btnEdit");
+  const showAllLink = document.querySelector(".catalog-panel__heading a");
 
-    offers.forEach((offer) => {
-      if (orderedSet.has(offer)) return;
-      offer.style.order = orderIndex;
-      orderIndex += 1;
-    });
-  };
-
-  const getOfferOrderValue = (offer, category) => {
-    const dataKey = orderFieldByCategory[category] || orderFieldByCategory.all;
-    const rawValue = offer.dataset[dataKey];
-    const parsed = Number(rawValue);
-    return Number.isFinite(parsed) && parsed > 0 ? parsed : 999999;
-  };
-
-  const getMatchingOffers = () =>
-    offers
-      .filter((offer) => matchesCategory(offer, activeCategory))
-      .sort(
-        (a, b) =>
-          getOfferOrderValue(a, activeCategory) -
-          getOfferOrderValue(b, activeCategory),
-      );
-
-  const syncActiveCategoryButtons = (category) => {
-    categoryButtons.forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.category === category);
-    });
-  };
-
-  const applyCategoryVisibility = () => {
-    offers.forEach((offer) => {
-      offer.classList.toggle(
-        "category-hidden",
-        !matchesCategory(offer, activeCategory),
-      );
-    });
-  };
-
-  const showNextBatch = (reset = false, animate = false) => {
-    const matchingOffers = getMatchingOffers();
-
-    if (reset) {
-      applyOffersOrder(matchingOffers);
-    }
-
-    const startIndex = reset ? 0 : visibleCount;
-
-    if (reset) {
-      visibleCount = 0;
-      applyCategoryVisibility();
-      matchingOffers.forEach((offer) => offer.classList.add("batch-hidden"));
-    }
-
-    const nextVisibleCount = Math.min(
-      visibleCount + batchSize,
-      matchingOffers.length,
-    );
-
-    for (let index = 0; index < nextVisibleCount; index++) {
-      matchingOffers[index].classList.remove("batch-hidden");
-    }
-
-    if (animate) {
-      const offersToAnimate = [];
-
-      for (let index = startIndex; index < nextVisibleCount; index++) {
-        const offer = matchingOffers[index];
-
-        offer.classList.remove("offer-stagger-in");
-        offer.style.removeProperty("--offer-stagger-delay");
-
-        offersToAnimate.push({
-          offer,
-          delay: `${(index - startIndex) * 70}ms`,
-        });
-      }
-
-      window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => {
-          offersToAnimate.forEach(({ offer, delay }) => {
-            offer.style.setProperty("--offer-stagger-delay", delay);
-            offer.classList.add("offer-stagger-in");
-          });
-        });
+  if (selectOffers) {
+    selectOffers.addEventListener("click", () => {
+      sendGa4Event("click_promo_select", {
+        event_category: "promo",
+        event_label: "select_offers",
+        ...getPromoAnalyticsState(),
       });
-    }
-
-    for (let index = nextVisibleCount; index < matchingOffers.length; index++) {
-      const offer = matchingOffers[index];
-      offer.classList.add("batch-hidden");
-      offer.classList.remove("offer-stagger-in");
-      offer.style.removeProperty("--offer-stagger-delay");
-    }
-
-    visibleCount = nextVisibleCount;
-    return visibleCount < matchingOffers.length;
-  };
-
-  const handleCatalogScroll = () => {
-    if (scrollTicking) return;
-
-    scrollTicking = true;
-
-    window.requestAnimationFrame(() => {
-      const hasMore = visibleCount < getMatchingOffers().length;
-
-      if (!hasMore) {
-        scrollTicking = false;
-        return;
-      }
-
-      const catalogRect = catalogSection.getBoundingClientRect();
-      const reachedCatalogEnd = catalogRect.bottom <= window.innerHeight + 80;
-
-      if (reachedCatalogEnd) {
-        showNextBatch(false, false);
-      }
-
-      scrollTicking = false;
     });
-  };
+  }
 
-  categoryButtons.forEach((button) => {
+  if (helpLink) {
+    helpLink.addEventListener("click", () => {
+      sendGa4Event("click_promo_help", {
+        event_category: "promo",
+        event_label: "how_it_works",
+      });
+    });
+  }
+
+  calculatorButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      activeCategory = button.dataset.category;
-      const categoryLabel = (button.textContent || "").trim();
-
-      if (typeof window.gtag === "function") {
-        window.gtag("event", "offers_category_change", {
-          event_category: "offers",
-          event_label: categoryLabel,
-          category_slug: activeCategory,
-          category_name: categoryLabel,
-        });
-      }
-
-      syncActiveCategoryButtons(activeCategory);
-      showNextBatch(true, true);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      handleCatalogScroll();
+      sendGa4Event("change_calculator", {
+        event_category: "calculator",
+        event_label: Number(button.value) > 0 ? "increase" : "decrease",
+        ...getPromoAnalyticsState(),
+      });
     });
   });
 
-  syncActiveCategoryButtons(activeCategory);
-  showNextBatch(true, false);
-  window.addEventListener("scroll", handleCatalogScroll, { passive: true });
+  if (amountInput) {
+    amountInput.addEventListener("change", () => {
+      sendGa4Event("change_calculator", {
+        event_category: "calculator",
+        event_label: "input",
+        ...getPromoAnalyticsState(),
+      });
+    });
+  }
+
+  if (rangeInput) {
+    rangeInput.addEventListener("change", () => {
+      sendGa4Event("change_calculator", {
+        event_category: "calculator",
+        event_label: "range",
+        ...getPromoAnalyticsState(),
+      });
+    });
+  }
+
+  if (showAllLink) {
+    showAllLink.addEventListener("click", () => {
+      sendGa4Event("click_show_all", {
+        event_category: "catalog",
+        event_label: "all_mfo",
+      });
+    });
+  }
 };
 
-document.addEventListener("DOMContentLoaded", initCategoryFilters);
+document.addEventListener("DOMContentLoaded", initPromoAnalytics);

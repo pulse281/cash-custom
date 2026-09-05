@@ -15,99 +15,12 @@ if (have_posts()) :
   while (have_posts()) : the_post();
 ?>
 
-    <section class="promo">
-      <div class="container">
-        <div class="promo__wrapper">
-          <div class="calculator">
-            <div class="calculator__title"><?php the_field('filter_header_fields') ?>
-            </div>
-            <div class="calculator__sum">
-              <div class="calculator__controls">
-                <button class="btn btnEdit minus" value="-500" data-controls>
-                  -
-                </button>
-                <input
-                  class="calculator__area calculator__area_sum"
-                  type="number"
-                  min="500"
-                  max="15000"
-                  step="500"
-                  value="1500" />
-                <button class="btn btnEdit plus" value="500" data-controls>
-                  +
-                </button>
-              </div>
-              <input
-                class="calculator__range"
-                type="range"
-                min="500"
-                max="50000"
-                step="500"
-                value="1500" />
-            </div>
-            <div class="calculator__day">
-              <div class="calculator__controls">
-                <button class="btn btnEdit minus" value="1">-</button>
-                <input
-                  class="calculator__area calculator__area_day"
-                  type="number"
-                  min="1"
-                  max="31"
-                  value="14" />
-                <button class="btn btnEdit plus" value="1">+</button>
-              </div>
-              <input
-                class="calculator__range"
-                type="range"
-                min="1"
-                max="31"
-                step="1"
-                value="14" />
-            </div>
-          </div>
-          <div class="promo__descr">
-            <h1><?php the_field('title_fields') ?></h1>
-            <div class="promo__subtitle">
-              <?php the_field('sub_title_fields') ?>
-            </div>
-            <ul class="promo__list">
-              <li class="promo__item"><?php the_field('list_1_fields') ?>
-              </li>
-              <li class="promo__item"><?php the_field('list_2_fields') ?>
-              </li>
-              <li class="promo__item"><?php the_field('list_3_fields') ?>
-
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
+    <?php get_template_part('template-parts/promo'); ?>
 
 
 
     <section class="catalog">
       <div class="wrapper">
-        <div class="container">
-          <h2><?php the_field('offers_title_fields') ?></h2>
-        </div>
-
-        <!-- Category Filter Buttons -->
-
-        <div class="category-filters">
-          <button class="category-btn active" data-category="all">Всі категорії</button>
-          <button class="category-btn" data-category="bez-vidsotkiv">під 0,01%</button>
-          <button class="category-btn" data-category="bez-dzvinkiv">Без дзвінків</button>
-          <button class="category-btn" data-category="pogana-ki">З поганою КІ</button>
-          <button class="category-btn" data-category="novi">Нові компанії</button>
-          <button class="category-btn" data-category="top">Топ МФО</button>
-        </div>
-
-
-        <!-- <div class="container">
-               <p class="offers-counter-text"></p>
-            </div> -->
-
         <div class="container">
 
 
@@ -144,6 +57,15 @@ if (have_posts()) :
             $offers_posts = $query->posts;
             $offer_icon_base = get_template_directory_uri() . '/assets/img/offer/';
 
+            get_template_part(
+              'template-parts/catalog-panel',
+              null,
+              [
+                'offers' => $offers_posts,
+                'title'  => get_field('offers_title_fields'),
+              ]
+            );
+
             if ($query->have_posts()) :
               while ($query->have_posts()) :
                 $query->the_post();
@@ -175,30 +97,12 @@ if (have_posts()) :
       </div>
     </section>
 
-
-
-    <div class="category-filters-container">
-      <div class="container">
-        <p class="offers-counter-text"></p>
-      </div>
-
-      <div class="category-filters">
-        <button class="category-btn active" data-category="all">Всі категорії</button>
-        <button class="category-btn" data-category="bez-vidsotkiv">під 0,01%</button>
-        <button class="category-btn" data-category="bez-dzvinkiv">Без дзвінків</button>
-        <button class="category-btn" data-category="pogana-ki">З поганою КІ</button>
-        <button class="category-btn" data-category="novi">Нові компанії</button>
-        <button class="category-btn" data-category="top">Топ МФО</button>
-      </div>
-
-
-      <div class="more-offers-button">
+<div class="more-offers-button">
         <a
           class="btn btn_offer-request"
           style="text-align: center;"
           href="<?php the_field('offer_button_more_link_fields') ?>"><?php the_field('offer_button_more_fields') ?></a>
       </div>
-    </div>
 
     <?php
       get_template_part('template-parts/advertising-banners');

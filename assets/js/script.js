@@ -95,13 +95,21 @@
         t = document.querySelectorAll(".btnEdit"),
         r = document.querySelector(".calculator__range"),
         s = document.querySelectorAll(".offer");
+      if (!e || !r) return;
+      const hero = e.closest(".promo-hero");
+      const normalize = (value) => Math.min(Number(r.max), Math.max(Number(r.min), Math.round(Number(value) / Number(r.step)) * Number(r.step)));
       function c(e, t) {
+        t = normalize(t);
         (e.forEach((e) => {
           e.value = t;
         }),
           o(t));
       }
       function o(e) {
+        if (hero) {
+          r.style.setProperty("--amount-progress", `${((Number(e) - Number(r.min)) / (Number(r.max) - Number(r.min))) * 100}%`);
+          r.setAttribute("aria-valuetext", `${e} гривень`);
+        }
         s.forEach((t) => {
           Number(t.getAttribute("data-max")) < Number(e) &&
           !t.classList.contains("hide")
@@ -113,7 +121,7 @@
       }
       (e.addEventListener("input", (e) => {
         const t = e.target.value;
-        e.target.value > 500 ? (c([r], t), o(t)) : (c([r], 500), o(500));
+        c([r], t);
       }),
         r.addEventListener("input", (t) => {
           const r = t.target.value;
@@ -121,10 +129,26 @@
         }),
         t.forEach((t) => {
           t.addEventListener("click", (t) => {
-            let s = Number(e.value) + Number(t.target.value);
+            let s = Number(e.value) + Number(t.currentTarget.value);
             s > 0 && c([e, r], s);
           });
         }));
+      e.addEventListener("change", () => c([e, r], e.value));
+      if (hero) {
+        c([e, r], e.value);
+        hero.querySelectorAll('a[href^="#"]').forEach((link) => {
+          link.addEventListener("click", (event) => {
+            const target = document.querySelector(link.getAttribute("href"));
+            if (!target || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+            event.preventDefault();
+            const catalog = target.closest(".catalog");
+            const isCatalogLink = link.classList.contains("promo-hero__submit") && catalog;
+            const destination = isCatalogLink ? catalog : target;
+            const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            destination.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+          });
+        });
+      }
     },
     n = () => {
       const e = document.querySelectorAll(".offer__wrapper"),

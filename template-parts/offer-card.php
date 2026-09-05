@@ -21,7 +21,6 @@ $offer_icon_base = isset($args['icon_base_url'])
 $variant          = isset($args['variant']) && in_array($args['variant'], ['soft', 'outline'], true)
   ? $args['variant']
   : 'soft';
-$category_slugs   = wp_list_pluck(get_the_category(), 'slug');
 ?>
 
 <div
@@ -29,14 +28,7 @@ $category_slugs   = wp_list_pluck(get_the_category(), 'slug');
   id="offer-<?php echo $idName ?>"
   data-percent=""
   data-max="<?php the_field('data_max'); ?>"
-  data-name="<?php echo $idName ?>"
-  data-order-default="<?php echo esc_attr((int) get_field('offer_order')); ?>"
-  data-order-zero-percent="<?php echo esc_attr((int) get_field('offer_order_zero_percent')); ?>"
-  data-order-top="<?php echo esc_attr((int) get_field('offer_order_top')); ?>"
-  data-order-bez-dzvinkiv="<?php echo esc_attr((int) get_field('offer_order_bez_dzvinkiv')); ?>"
-  data-order-pogana-ki="<?php echo esc_attr((int) get_field('offer_order_pogana_ki')); ?>"
-  data-order-novi="<?php echo esc_attr((int) get_field('offer_order_novi')); ?>"
-  data-categories="<?php echo esc_attr(implode(',', $category_slugs)); ?>">
+  data-name="<?php echo $idName ?>">
 
   <?php if ($badge_logo_id || $badge_info_text) : ?>
     <div class="offer_badge_info<?php echo $badge_logo_id ? '' : ' offer_badge_info--text'; ?>">

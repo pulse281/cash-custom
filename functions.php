@@ -9,7 +9,7 @@
 
 if ( ! defined( '_S_VERSION' ) ) {
 	// Replace the version number of the theme on each release.
-	define( '_S_VERSION', '1.0.13' );
+	define( '_S_VERSION', '1.0.14' );
 }
 
 /**
@@ -211,7 +211,7 @@ function cash_scripts() {
 		'cash-scripts',
 		get_template_directory_uri() . '/assets/js/script.js',
 		array(),
-		'1.0.7',
+		'1.0.8',
 		array(
 			'in_footer' => true,
 			'strategy'  => 'defer',

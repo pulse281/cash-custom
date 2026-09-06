@@ -40,7 +40,7 @@
           <p class="sidebar__message-text">
             <?php echo pll__('Цей сайт використовує файли cookie та подібні технології для забезпечення зручного користування. Продовжуючи перегляд сайту, ви погоджуєтеся на використання cookie відповідно до цього повідомлення. Якщо ви не згодні з їх використанням, будь ласка, змініть налаштування свого браузера або утримайтеся від використання сайту.'); ?>
           </p>
-          <button class="sidebar__message-close" id="sidebar__message-close" type="button" aria-label="<?php echo esc_attr(pll__('Закрити')); ?>">
+          <button class="sidebar__message-close" id="sidebar__message-close" type="button" >
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path d="M6 6l12 12M18 6 6 18" />
             </svg>

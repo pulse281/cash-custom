@@ -2272,7 +2272,7 @@ footer {
   }
   .promo-hero__benefits li {
     flex-direction: row;
-    gap: 0;
+    gap: 5px;
     text-align: center;
     font-size: 11px;
     line-height: 1.2;

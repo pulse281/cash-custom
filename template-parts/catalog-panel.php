@@ -41,7 +41,7 @@ if (!$all_offers_url) {
       <span class="catalog-panel__icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none"><path d="M7 3h7l4 4v14H7z" fill="currentColor" opacity=".18"/><path d="M14 3v5h5M10 12h5M10 15h5M10 18h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </span>
-      <span><strong><?php echo esc_html($offers_count); ?></strong><small>пропозицій</small></span>
+      <span><strong class="catalog-panel__offers-count" aria-live="polite" aria-atomic="true"><?php echo esc_html($offers_count); ?></strong><small>пропозицій</small></span>
     </li>
     <li class="catalog-panel__stat">
       <span class="catalog-panel__icon" aria-hidden="true">

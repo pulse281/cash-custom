@@ -97,15 +97,16 @@
         s = document.querySelectorAll(".offer");
       if (!e || !r) return;
       const hero = e.closest(".promo-hero");
+      const offersCount = document.querySelector(".catalog-panel__offers-count");
       const normalize = (value) => Math.min(Number(r.max), Math.max(Number(r.min), Math.round(Number(value) / Number(r.step)) * Number(r.step)));
-      function c(e, t) {
+      function c(e, t, updateOffersCount = true) {
         t = normalize(t);
         (e.forEach((e) => {
           e.value = t;
         }),
-          o(t));
+          o(t, updateOffersCount));
       }
-      function o(e) {
+      function o(e, updateOffersCount = true) {
         if (hero) {
           r.style.setProperty("--amount-progress", `${((Number(e) - Number(r.min)) / (Number(r.max) - Number(r.min))) * 100}%`);
           r.setAttribute("aria-valuetext", `${e} гривень`);
@@ -118,6 +119,9 @@
               t.classList.contains("hide") &&
               t.classList.remove("hide");
         });
+        if (offersCount && updateOffersCount) {
+          offersCount.textContent = Array.from(s).filter((offer) => !offer.classList.contains("hide")).length;
+        }
       }
       (e.addEventListener("input", (e) => {
         const t = e.target.value;
@@ -135,7 +139,7 @@
         }));
       e.addEventListener("change", () => c([e, r], e.value));
       if (hero) {
-        c([e, r], e.value);
+        c([e, r], e.value, false);
         hero.querySelectorAll('a[href^="#"]').forEach((link) => {
           link.addEventListener("click", (event) => {
             const target = document.querySelector(link.getAttribute("href"));

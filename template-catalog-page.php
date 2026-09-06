@@ -99,8 +99,7 @@ get_header();
                   $query->the_post();
               ?>
 
-                  <div>
-                    <?php
+                  <?php
                   $order = (int) get_field($order_field);
 
                   get_template_part(
@@ -112,7 +111,6 @@ get_header();
                     ]
                   );
                   ?>
-                  </div>
 
               <?php
                 endwhile;

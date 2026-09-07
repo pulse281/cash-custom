@@ -382,5 +382,6 @@ endif;
 </main>
 
 <?php
+get_template_part('template-parts/offers-modal');
 get_footer();
 ?>

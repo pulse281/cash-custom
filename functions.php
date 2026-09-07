@@ -9,7 +9,7 @@
 
 if ( ! defined( '_S_VERSION' ) ) {
 	// Replace the version number of the theme on each release.
-	define( '_S_VERSION', '1.0.14' );
+	define( '_S_VERSION', '1.0.16' );
 }
 
 /**
@@ -206,6 +206,15 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 add_theme_support( 'custom-logo' );
 
 function cash_scripts() {
+	if (is_page_template(['template-home.php', 'template-catalog-page.php'])) {
+		wp_enqueue_script(
+			'cash-offers-modal',
+			get_template_directory_uri() . '/assets/js/offers-modal.js',
+			['theme-custom-js'],
+			'1.0.2',
+			['in_footer' => true, 'strategy' => 'defer']
+		);
+	}
 
 	wp_enqueue_script(
 		'cash-scripts',
@@ -222,7 +231,7 @@ function cash_scripts() {
 		'theme-custom-js',
 		get_template_directory_uri() . '/assets/js/custom.js',
 		array( 'cash-scripts' ),
-		'1.0.3',
+		'1.0.5',
 		array(
 			'in_footer' => true,
 			'strategy'  => 'defer',

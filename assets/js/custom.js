@@ -54,12 +54,43 @@ const sidebarMessage = () => {
 
 document.addEventListener("DOMContentLoaded", sidebarMessage);
 
+const modalOfferStorageKey = "cashKreditModalOfferSelected";
+const modalClosedStorageKey = "cashKreditOffersModalClosed";
+
+const hasModalOfferSelection = () => {
+  try {
+    return sessionStorage.getItem(modalOfferStorageKey) === "1";
+  } catch (error) {
+    return window.__cashKreditModalOfferSelected === true;
+  }
+};
+
+const hasClosedOffersModal = () => {
+  try {
+    return sessionStorage.getItem(modalClosedStorageKey) === "1";
+  } catch (error) {
+    return window.__cashKreditOffersModalClosed === true;
+  }
+};
+
+const markOffersModalClosed = () => {
+  window.__cashKreditOffersModalClosed = true;
+  try {
+    sessionStorage.setItem(modalClosedStorageKey, "1");
+  } catch (error) {}
+};
+
 const initOfferClickTracking = () => {
   const offerButtons = document.querySelectorAll(".btn_offer");
 
   if (!offerButtons.length) return;
 
   const promoId = Date.now().toString();
+  const offersModal = document.querySelector(".offers-modal");
+
+  if (offersModal) {
+    offersModal.addEventListener("close", markOffersModalClosed, { once: true });
+  }
 
   offerButtons.forEach((button) => {
     const baseUrl = button.dataset.baseUrl;
@@ -76,14 +107,21 @@ const initOfferClickTracking = () => {
     }
 
     button.href = url.toString();
+    button.dataset.promoId = promoId;
 
     button.addEventListener("click", () => {
       if (typeof window.gtag !== "function") return;
 
-      window.gtag("event", "click_offer", {
+      const eventParams = {
         event_category: "offers",
         event_label: promoId,
-      });
+      };
+
+      if (!button.closest(".offers-modal") && hasClosedOffersModal()) {
+        eventParams.modal = hasModalOfferSelection() ? 1 : 0;
+      }
+
+      window.gtag("event", "click_offer", eventParams);
     });
   });
 };

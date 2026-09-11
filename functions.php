@@ -211,7 +211,7 @@ function cash_scripts() {
 			'cash-offers-modal',
 			get_template_directory_uri() . '/assets/js/offers-modal.js',
 			['theme-custom-js'],
-			'1.0.2',
+			'1.0.3',
 			['in_footer' => true, 'strategy' => 'defer']
 		);
 	}

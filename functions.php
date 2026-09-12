@@ -9,7 +9,7 @@
 
 if ( ! defined( '_S_VERSION' ) ) {
 	// Replace the version number of the theme on each release.
-	define( '_S_VERSION', '1.0.16' );
+	define( '_S_VERSION', '1.0.17' );
 }
 
 /**
@@ -190,6 +190,7 @@ require get_template_directory() . '/inc/template-tags.php';
  * Functions which enhance the theme by hooking into WordPress.
  */
 require get_template_directory() . '/inc/template-functions.php';
+require get_template_directory() . '/inc/offer-page.php';
 
 /**
  * Customizer additions.
@@ -211,7 +212,7 @@ function cash_scripts() {
 			'cash-offers-modal',
 			get_template_directory_uri() . '/assets/js/offers-modal.js',
 			['theme-custom-js'],
-			'1.0.3',
+			filemtime(get_template_directory() . '/assets/js/offers-modal.js'),
 			['in_footer' => true, 'strategy' => 'defer']
 		);
 	}
@@ -220,7 +221,7 @@ function cash_scripts() {
 		'cash-scripts',
 		get_template_directory_uri() . '/assets/js/script.js',
 		array(),
-		'1.0.8',
+		filemtime(get_template_directory() . '/assets/js/script.js'),
 		array(
 			'in_footer' => true,
 			'strategy'  => 'defer',
@@ -231,7 +232,7 @@ function cash_scripts() {
 		'theme-custom-js',
 		get_template_directory_uri() . '/assets/js/custom.js',
 		array( 'cash-scripts' ),
-		'1.0.5',
+		filemtime(get_template_directory() . '/assets/js/custom.js'),
 		array(
 			'in_footer' => true,
 			'strategy'  => 'defer',
